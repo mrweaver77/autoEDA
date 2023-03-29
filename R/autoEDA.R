@@ -50,13 +50,14 @@ clean_ints <- function(x,
 #' @param outcome_type either 'regression' or 'classification'
 #' @param positive_class if doing binary classification then specify the positive class
 #' @param remove_outliers remove outliers via clean_ints
+#' @param smooth_adjust # degree of smoothing of density plot
 viz_int <- function(data,
                     var,
                     outcome,
                     outcome_type,
                     positive_class = NA,
-                    remove_outliers = TRUE,
-                    smooth_adjust = 2.8) {
+                    remove_outliers = TRUE,,
+                    smooth_adjust = 1) {
 
   options(ggplot2.discrete.color = c("grey64", "dodgerblue4"))
 
@@ -106,7 +107,7 @@ viz_int <- function(data,
     } else {
       p1 <-data %>%
         ggplot(aes_string(x = var, fill=outcome)) +
-        geom_density(alpha=.6)
+        geom_density(alpha=.6, adjust = smooth_adjust)
 
       label_pos <- max(data[,var],na.rm = T)*1.1
 
@@ -128,7 +129,7 @@ viz_int <- function(data,
     data %>%
       ggplot(aes_string(x = var, y = outcome)) +
       geom_point(stat = "identity") +
-      geom_smooth(method = "lm", adjust = smooth_adjust) +
+      geom_smooth(method = "lm") +
       labs(title = paste0(var," and ",outcome)) +
       stat_cor(method = "pearson")
   } else {
@@ -147,7 +148,7 @@ viz_int <- function(data,
 #' @param na_remove specify the removal of outliers
 #' @param lump group all levels underneath a certain threshold as 'other'
 #' @param prop if using lump specify the proportion
-#' @param string_miss replace levels like 'unknown' or 'other' with NA\
+#' @param string_miss replace levels like 'unknown' or 'other' with NA
 viz_factor <- function(data,
                        outcome,
                        outcome_type,
@@ -321,11 +322,12 @@ viz_factor <- function(data,
 #' @param outcome outcome name in string format
 #' @param outcome_type either 'classification' or 'regression'
 #' @param positive_class if doing binary classification specify the positive class
+#' @param smooth_adjust
 viz_data <- function(data,
                      outcome,
                      outcome_type,
                      positive_class = NA,
-                     smooth_adjust = 2.8) {
+                     smooth_adjust = 1) {
   pb <- txtProgressBar(min = 0, max = ncol(data), style = 3)
   df <- data %>%
     mutate_if(is.factor, as.character) %>%
