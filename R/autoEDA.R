@@ -55,7 +55,8 @@ viz_int <- function(data,
                     outcome,
                     outcome_type,
                     positive_class = NA,
-                    remove_outliers = TRUE) {
+                    remove_outliers = TRUE,
+                    smooth_adjust = 2.8) {
 
   options(ggplot2.discrete.color = c("grey64", "dodgerblue4"))
 
@@ -83,7 +84,7 @@ viz_int <- function(data,
 
       p1 <-data %>%
         ggplot(aes_string(x = var, fill=outcome)) +
-        geom_density(alpha=.6) +
+        geom_density(alpha=.6, adjust = smooth_adjust) +
         geom_text(aes(x=mean(data[,var], na.rm = T),
                       y=label_pos_cor,
                       label = paste0("r = ",round(as.numeric(c$estimate),2),
@@ -127,7 +128,7 @@ viz_int <- function(data,
     data %>%
       ggplot(aes_string(x = var, y = outcome)) +
       geom_point(stat = "identity") +
-      geom_smooth(method = "lm") +
+      geom_smooth(method = "lm", adjust = smooth_adjust) +
       labs(title = paste0(var," and ",outcome)) +
       stat_cor(method = "pearson")
   } else {
@@ -323,7 +324,8 @@ viz_factor <- function(data,
 viz_data <- function(data,
                      outcome,
                      outcome_type,
-                     positive_class = NA) {
+                     positive_class = NA,
+                     smooth_adjust = 2.8) {
   pb <- txtProgressBar(min = 0, max = ncol(data), style = 3)
   df <- data %>%
     mutate_if(is.factor, as.character) %>%
@@ -356,7 +358,8 @@ viz_data <- function(data,
                        var = colnames(df)[i],
                        outcome = outcome,
                        outcome_type = outcome_type,
-                       remove_outliers = FALSE)
+                       remove_outliers = FALSE,
+                       smooth_adjust = smooth_adjust)
         } else {
 
           if (length(unique(df[,outcome])) == 2) {
@@ -365,13 +368,15 @@ viz_data <- function(data,
                          outcome = outcome,
                          outcome_type = outcome_type,
                          positive_class = positive_class,
-                         remove_outliers = TRUE)
+                         remove_outliers = TRUE,
+                         smooth_adjust = smooth_adjust)
           } else {
             p <- viz_int(df,
                          var = colnames(df)[i],
                          outcome = outcome,
                          outcome_type = outcome_type,
-                         remove_outliers = TRUE)
+                         remove_outliers = TRUE,
+                         smooth_adjust = smooth_adjust)
           }
         }
       } else if (is.character(df[,i])) {
