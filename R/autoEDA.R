@@ -56,7 +56,7 @@ viz_int <- function(data,
                     outcome,
                     outcome_type,
                     positive_class = NA,
-                    remove_outliers = TRUE,,
+                    remove_outliers = TRUE,
                     smooth_adjust = 1) {
 
   options(ggplot2.discrete.color = c("grey64", "dodgerblue4"))
