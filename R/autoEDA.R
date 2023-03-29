@@ -325,7 +325,7 @@ viz_data <- function(data,
                      outcome,
                      outcome_type,
                      positive_class = NA,
-                     smooth_adjust = 2.8) {
+                     smooth_adjust_val = 2.8) {
   pb <- txtProgressBar(min = 0, max = ncol(data), style = 3)
   df <- data %>%
     mutate_if(is.factor, as.character) %>%
@@ -359,7 +359,7 @@ viz_data <- function(data,
                        outcome = outcome,
                        outcome_type = outcome_type,
                        remove_outliers = FALSE,
-                       smooth_adjust = smooth_adjust)
+                       smooth_adjust = smooth_adjust_val)
         } else {
 
           if (length(unique(df[,outcome])) == 2) {
@@ -369,14 +369,14 @@ viz_data <- function(data,
                          outcome_type = outcome_type,
                          positive_class = positive_class,
                          remove_outliers = TRUE,
-                         smooth_adjust = smooth_adjust)
+                         smooth_adjust = smooth_adjust_val)
           } else {
             p <- viz_int(df,
                          var = colnames(df)[i],
                          outcome = outcome,
                          outcome_type = outcome_type,
                          remove_outliers = TRUE,
-                         smooth_adjust = smooth_adjust)
+                         smooth_adjust = smooth_adjust_val)
           }
         }
       } else if (is.character(df[,i])) {
